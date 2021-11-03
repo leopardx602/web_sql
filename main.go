@@ -86,9 +86,7 @@ func sqlSelect(conn *sql.DB, command string) ([]Product, error) {
 			return nil, err
 		}
 		products = append(products, product)
-		//fmt.Println(product.Name, product.Price)
 	}
-	//fmt.Println(products)
 	return products, nil
 }
 
@@ -101,32 +99,7 @@ func main() {
 	}
 	defer conn.Close()
 
-	// err = createTable(conn)
-	// if err != nil {
-	// 	log.Println(err)
-	// }
-
-	// err = insert(conn, "iphone12", 27000, "")
-	// if err != nil {
-	// 	fmt.Println(err)
-	// }
-
-	// err = update(conn, 2, "iphone11", 3000, "")
-	// if err != nil{
-	// 	log.Println(err)
-	// }
-
-	// err = delete(conn, 1)
-	// if err != nil {
-	// 	log.Println(err)
-	// }
-
-	products, err := sqlSelect(conn, "SELECT * FROM table01")
-	if err != nil {
-		fmt.Println(err)
-	}
-	fmt.Println(products)
-
+	// http service
 	router := gin.Default()
 	router.LoadHTMLGlob("templates/*.html")
 	router.GET("/", func(ctx *gin.Context) {
@@ -136,6 +109,10 @@ func main() {
 	v1 := router.Group("/products")
 	{
 		v1.GET("/", func(ctx *gin.Context) {
+			products, err := sqlSelect(conn, "SELECT * FROM table01")
+			if err != nil {
+				fmt.Println(err)
+			}
 			data, err := json.Marshal(products)
 			if err != nil {
 				fmt.Println(err)
@@ -177,12 +154,9 @@ func main() {
 		v1.PUT("/:productID", func(ctx *gin.Context) {
 			var product Product
 			ctx.BindJSON(&product)
-			fmt.Println(product)
-
 			if err := update(conn, &product); err != nil {
 				log.Println(err)
 			}
-
 			ctx.String(200, "ok")
 		})
 
@@ -196,5 +170,4 @@ func main() {
 
 	router.Static("/static", "./static")
 	router.Run(":5000")
-
 }

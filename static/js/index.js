@@ -1,5 +1,6 @@
 $(document).ready(() => {
   var table = $('#example').DataTable();
+
   $.get("/products", function(data) {
     Object.keys(data).forEach(key => {
       console.log(key, data[key]);
@@ -12,6 +13,16 @@ $(document).ready(() => {
         data[key]['updateAt'],
       ]).draw( false );
     });
+  });
+
+  $('#example tbody').on( 'click', 'tr', function () {
+    if ( $(this).hasClass('selected') ) {
+        $(this).removeClass('selected');
+    }
+    else {
+        table.$('tr.selected').removeClass('selected');
+        $(this).addClass('selected');
+    }
   });
 
   $("#add").click(()=>{
@@ -30,6 +41,8 @@ $(document).ready(() => {
   })
 
   $("#delete").click(()=>{
+    //table.row('.selected').remove().draw( false );
+    //console.log(table.row(".selected").data()[0])
     console.log($("#deleteID").val())
     $.ajax({
       url: `/products/${$("#deleteID").val()}`,

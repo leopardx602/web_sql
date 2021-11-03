@@ -1,20 +1,10 @@
-#table_shell{
-  height:40vh;
-  background-color: bisque;
-  overflow: auto;
+.option{
+  margin:10px;
+  padding:10px;
+  width:250px;
+  box-shadow: 2px 2px 10px #777;
 }
 
-.css_table{
-  display:table;
-}
-.css_tr{
-  display:table-row;
-}
-.css_td{
-  display:table-cell;
-  border:solid 1px red;
-  width:200px;
-  text-align: center;
-  padding: 5px;
-
+.option>div{
+  margin:5px;
 }
